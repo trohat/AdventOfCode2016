@@ -37,7 +37,7 @@ Array.prototype.union = function (arrB) {
 // jigsaw operations (first used in 2020 day 20)
 Array.prototype.rotateRight = function() {
     let newTile = [];
-    for (let i = 0; i < this.length; i++) {
+    for (let i = 0; i < this[0].length; i++) {
         newTile.push("");
     }
     for (const line of this) {

@@ -4,7 +4,7 @@ const splitLines = (data) => data.split(String.fromCharCode(10));
 
 const prepare = data => data;
 
-const task1 = (data) => {
+const task1 = data => {
     
 };
 

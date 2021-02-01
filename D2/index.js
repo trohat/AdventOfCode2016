@@ -51,11 +51,7 @@ UUUUD`;
 
 inputdata = prepare(splitLines(inputdata));
 
-console.log(inputdata);
-
 testdata = prepare(splitLines(testdata));
-
-console.log(testdata);
 
 console.log("");
 
@@ -65,6 +61,6 @@ console.log("Task 1: " + task1(inputdata));
 
 console.log("");
 
-doEqualTest(task2(testdata), 336);
+doEqualTest(task2(testdata), "5DB3");
 
 console.log("Task 2: " + task2(inputdata));

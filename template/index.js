@@ -1,6 +1,6 @@
 console.log("AOC 2016 - ");
 
-const splitLines = (data) => data.split(String.fromCharCode(10));
+const splitLines = data => data.split(String.fromCharCode(10));
 
 const prepare = data => data;
 

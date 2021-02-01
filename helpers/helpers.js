@@ -42,7 +42,8 @@ Array.prototype.rotateRight = function() {
     }
     for (const line of this) {
         for (let i = 0; i < line.length; i++) {
-            newTile[i] = line.charAt(i) + newTile[i];
+            if (Array.isArray(line)) newTile[i] = [line[i], ...newTile[i]];
+            else newTile[i] = line.charAt(i) + newTile[i];
         }   
     }
     return newTile;
@@ -58,6 +59,24 @@ Array.prototype.flip = function() {
         newTile.push(line.reverse());
     }
     return newTile;
+}
+
+//jigsaw operations, but with array of arrays
+Array.prototype.rotateRightWithArray = function() {
+    let newTile = [];
+    for (let i = 0; i < this[0].length; i++) {
+        newTile.push("");
+    }
+    for (const line of this) {
+        for (let i = 0; i < line.length; i++) {
+            newTile[i] = [line[i], ...newTile[i]];
+        }   
+    }
+    return newTile;
+}
+
+Array.prototype.rotateLeftWithArray = function() {
+    return this.rotateRightWithArray().rotateRightWithArray().rotateRightWithArray();
 }
 
 // --- Strings ---

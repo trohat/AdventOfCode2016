@@ -1,0 +1,1 @@
+let inputdata = [ [ "TG", "TM", "PG", "SG" ], [ "PM", "SM"], [ "QG", "QM", "RG", "RM"], []];

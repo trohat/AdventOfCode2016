@@ -67,11 +67,7 @@ rotate column x=1 by 1`;
 
 inputdata = prepare(splitLines(inputdata));
 
-console.log(inputdata);
-
 testdata = prepare(splitLines(testdata));
-
-console.log(testdata);
 
 console.log("");
 

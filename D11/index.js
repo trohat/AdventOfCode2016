@@ -21,103 +21,92 @@ const generateElevatorContent = floor => {
     return elevatorContent;
 }
 
-const enumerateState = (floors, test) => {
+const enumerateState = (floors, elevator, task) => {
     let itemsInFloors = {};
-    let items = [ "P", "Q", "R", "S", "T"];
-    if (test === "test") items = [ "H", "L"];
+    let items = [ "P", "Q", "R", "S", "T" ];
+    if (task === "test") items = [ "H", "L"];
+    if (task === "task2") items.push("D", "E");
     floors.forEach((floor, floorIndex) => {
         floor.forEach((item) => {
             itemsInFloors[item] = floorIndex + 1;
         })
     });
-    return items.map(i => "" + itemsInFloors[i + "G"] + itemsInFloors[i + "M"]).sort((a,b) => a-b).join("");
+    return items.map(i => "" + itemsInFloors[i + "M"] + itemsInFloors[i + "G"]).sort((a,b) => a-b).join("") + "-" + (elevator + 1);
 };
 
 let elevatorDirs = [ [ 1 ], [ 1, -1 ], [ 1, -1 ], [ -1 ]];
 
-const task1 = (floors, test) => {
-    const makeOneStep = (floors, elevator, steps, states, test) => {
-        let topFloorLength = 8;
-        if (test === "test") topFloorLength = 4;
-        if (floors[3].length === topFloorLength) {
-            //console.log("Found");
-            let length = steps.length;
-            if (length < shortest) shortest = length;
-            //console.log("Length: " + length);
-            //console.log("Steps: " + steps.join("  "));
-            //console.log("");
-        }
-        let madeMoves = [];
-        let newStates;
-        
-        let state = enumerateState(floors, test);
-        if (states.includes(state)) return;
-        newStates = [ ...states, state];
-        
-        let possibleMoves = generateElevatorContent(floors[elevator]);
-        possibleMoves = possibleMoves.filter(move => isValid(floors[elevator].filter(item => !move.includes(item))));
-        for (const dir of elevatorDirs[elevator]) {
-            const newElevator = elevator + dir;
-            for (const move of possibleMoves) {
-
-                // stop if repeating last move
-                let newStep = dir + ":" + move.toString();
-                let stepToStopRepeating;
-                if (newStep[0] === "-") stepToStopRepeating = newStep.slice(1);
-                else stepToStopRepeating = "-" + newStep;
-                if (stepToStopRepeating === steps[steps.length-1]) continue;
-
-                const newFloorContent = move.concat(floors[newElevator]);
-                if (isValid(newFloorContent)) {
-                    let newFloors = floors.map( (floor, index) => {
-                        if (index === elevator) return floor.filter(item => !move.includes(item));
-                        if (index === newElevator) return move.concat(floor);
-                        return floor;
-                    });
-                    
-                    let moveState = enumerateState(newFloors, test);
-                    if (madeMoves.includes(moveState)) continue;
-                    madeMoves.push(moveState);
-                    
-                    let newSteps = [...steps, newStep];
-                    uniqueStates.add(enumerateState(floors));
-                    if (newSteps.length < 8) makeOneStep(newFloors, newElevator, newSteps, newStates, test);
-                    else ;
-                    //(console.log (steps.join("  "), "  ", elevator, "  ", possibleMoves.join("-"),"  " ,floors.join("--")));
-                }
-            }
-        }
-    }
+const task1 = (floors, task) => {
+    const maxSteps = 100;
+    let steps = 0;
+    let finalState = "4444444444-4";
+    if (task === "test") finalState = "4444-4";
+    if (task === "task2") finalState = "4444" + finalState;
+    
     let uniqueStates = new Set();
-    let shortest = 10e10;
-    let steps = [];
-    let states = [];
-    let elevator = 0;
-    makeOneStep(floors, elevator, steps, states, test);
-    console.log(uniqueStates);
-    return shortest;
+    uniqueStates.add(enumerateState(floors, 0, task));
+    let states = [ { floors, elevator: 0 } ];
+
+    while (steps < maxSteps) {
+        steps++;
+        let newStates = [];
+        for (const state of states) {
+            let floors = state.floors;
+            const elevator = state.elevator;
+            
+            let possibleMoves = generateElevatorContent(floors[elevator]);
+            possibleMoves = possibleMoves.filter(move => isValid(floors[elevator].filter(item => !move.includes(item))));
+            for (const dir of elevatorDirs[elevator]) {
+                const newElevator = elevator + dir;
+                for (const move of possibleMoves) {
+                    const newFloorContent = move.concat(floors[newElevator]);
+                    if (isValid(newFloorContent)) {
+                        let newFloors = floors.map( (floor, index) => {
+                            if (index === newElevator) return move.concat(floor);
+                            if (index === elevator) return floor.filter(item => !move.includes(item));
+                            return floor;
+                        });
+                        let state = enumerateState(newFloors, newElevator, task);
+                        if (state === finalState) return steps;
+                        if (!uniqueStates.has(state)) {
+                            uniqueStates.add(state);
+                            newStates.push({ floors: newFloors, elevator: newElevator });
+                        }
+                    }
+                }       
+            }
+        } 
+        states = newStates;
+    }
+
+    return "not found";
 };
 
-const task2 = data => {
-    
+const task2 = floors => {
+    floors[0].push("DM", "DG", "EM", "EG");
+    return task1(floors, "task2")
 }
 
 let testdata = [ [ "HM", "LM"], [ "HG" ], [ "LG" ], [] ];
 
 console.log("");
 
-
 console.time();
-//doEqualTest(task1(testdata, "test"), 11);
+
+doEqualTest(task1(testdata, "test"), 11);
+
 console.log("Task 1: " + task1(inputdata));
-console.timeEnd();
 
 console.log("");
 
-//doEqualTest(task2(testdata), 336);
+console.log("Task 2: " + task2(inputdata));
 
-//console.log("Task 2: " + task2(inputdata));
+console.timeEnd();
 
+
+
+/*
+Tests for helpers:
 console.assert(isValid([]) === true);
 console.assert(isValid([ "AM"]) === true);
 console.assert(isValid([ "AG"]) === true);
@@ -131,7 +120,7 @@ console.assert(isValid([ "BG", "AM"]) === false);
 console.assert(isValid([ "BG", "AM", "AG", "CM"]) === false);
 console.assert(isValid([ "BG", "AM", "CM"]) === false);
 
-/*
+
 console.log(generateElevatorContent([ "AG", "AM", "CG", "DG"]));
 console.log(generateElevatorContent([ "AG" ]));
 console.log(generateElevatorContent([ "AG", "AM"]));

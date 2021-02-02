@@ -34,7 +34,8 @@ Array.prototype.union = function (arrB) {
     return [...new Set([...this, ...arrB])].sort();
 }
 
-// jigsaw operations (first used in 2020 day 20)
+// next 3 are jigsaw operations (first used in 2020 day 20)
+// rotations work both for array of strings and array of arrays
 Array.prototype.rotateRight = function() {
     let newTile = [];
     for (let i = 0; i < this[0].length; i++) {
@@ -59,24 +60,6 @@ Array.prototype.flip = function() {
         newTile.push(line.reverse());
     }
     return newTile;
-}
-
-//jigsaw operations, but with array of arrays
-Array.prototype.rotateRightWithArray = function() {
-    let newTile = [];
-    for (let i = 0; i < this[0].length; i++) {
-        newTile.push("");
-    }
-    for (const line of this) {
-        for (let i = 0; i < line.length; i++) {
-            newTile[i] = [line[i], ...newTile[i]];
-        }   
-    }
-    return newTile;
-}
-
-Array.prototype.rotateLeftWithArray = function() {
-    return this.rotateRightWithArray().rotateRightWithArray().rotateRightWithArray();
 }
 
 // --- Strings ---

@@ -56,8 +56,10 @@ const task1 = (floors, task) => {
             
             let possibleMoves = generateElevatorContent(floors[elevator]);
             possibleMoves = possibleMoves.filter(move => isValid(floors[elevator].filter(item => !move.includes(item))));
+
             for (const dir of elevatorDirs[elevator]) {
                 const newElevator = elevator + dir;
+                
                 for (const move of possibleMoves) {
                     const newFloorContent = move.concat(floors[newElevator]);
                     if (isValid(newFloorContent)) {

@@ -2,7 +2,7 @@ console.log("AOC 2016 - Day 19: An Elephant Named Joseph");
 
 const task1 = elves => {
     let first = { number: 1 };
-    first.next = first;
+    //first.next = first; not necessary, just copied from spinlock, where it necessary was
     let current = first;
 
     for (let i = 2; i <= elves; i++) {

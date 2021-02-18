@@ -46,6 +46,7 @@ const prepare = map => {
                 if (stepsSet.has([newX, newY].toString())) continue;
 
                 const field = map[newY][newX];
+                
                 if (field === "#") continue;
 
                 if (isNumber(field)) keyDistances[field] = newSteps;
